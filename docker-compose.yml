@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: kevinmartinez13/taller-docker:latest
+    image: kevinmartinez13/mi-app-web:latest
     ports:
       - "5050:5050"
 
