@@ -56,4 +56,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/mi-app-web:latest
             sudo docker stop mi-app-web || true
             sudo docker rm -f mi-app-web || true
-            sudo docker run -d -p 3001:3001 --name mi-app-web ${{ secrets.DOCKERHUB_USERNAME }}/mi-app-web:latest
+            sudo docker run -d -p 3002:3001 --name mi-app-web ${{ secrets.DOCKERHUB_USERNAME }}/mi-app-web:latest
