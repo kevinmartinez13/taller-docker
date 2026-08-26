@@ -2,7 +2,7 @@ FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-RUN pip install flask
+RUN pip install --no-cache-dir flask
 
 COPY app.py .
 
