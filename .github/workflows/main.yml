@@ -2,6 +2,8 @@ name: CI/CD Pipeline
 
 on:
   push:
+    branches: [ "main", "master", "feature/*" ]
+  pull_request:
     branches: [ "main", "master" ]
 
 jobs:
@@ -19,8 +21,12 @@ jobs:
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-flask
+          pip install pytest pytest-flask bandit
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Escaneo de Seguridad SAST (Bandit)
+        run: |
+          bandit -r . -x ./venv
 
       - name: Ejecutar Pruebas Unitarias
         run: |
@@ -39,7 +45,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build y Push a Docker Hub
+      - name: Build local para analisis
+        run: |
+          docker build -t mi-app-web:test .
+
+      - name: Escaneo de Imagen Docker (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'mi-app-web:test'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push a Docker Hub
         uses: docker/build-push-action@v4
         with:
           context: .
