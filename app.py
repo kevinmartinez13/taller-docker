@@ -1,6 +1,9 @@
+import os
 from flask import Flask
 
 app = Flask(__name__)
+
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "default_safe_password")
 
 @app.route('/')
 def home():
